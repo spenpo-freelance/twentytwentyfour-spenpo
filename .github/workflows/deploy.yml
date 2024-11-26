@@ -1,4 +1,4 @@
-name: Deploy Theme
+name: Deploy Child Theme
 
 on:
   push:
@@ -10,15 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: List repository files
+        run: ls -la ./src/
 
       - name: List repository files
         run: ls -la
 
-      - name: Deploy via rsync
-        run: |
-          rsync -avz --delete -e "ssh -p ${{ secrets.PORT }}" ./src/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:domains/introspective20s.com/public_html/wp-content/themes/twentytwentyfour-spenpo/
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            rsync -avz --delete ./src/ domains/introspective20s.com/public_html/wp-content/themes/twentytwentyfour-spenpo/
