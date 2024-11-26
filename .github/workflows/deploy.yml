@@ -13,12 +13,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: List repository files
-        run: ls -la ./src/
-
-      - name: List repository files
-        run: ls -la
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -27,4 +21,4 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            rsync -avz --delete ./src/ domains/introspective20s.com/public_html/wp-content/themes/twentytwentyfour-spenpo/
+            rsync -avz --delete domains/introspective20s.com/public_html/wp-content/themes/twentytwentyfour-spenpo/ ./src/
