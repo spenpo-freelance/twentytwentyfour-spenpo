@@ -1,7 +1,14 @@
 .chat-container {
-    max-width: 800px;
-    margin: 2rem auto;
+    max-width: 80%;
+    margin: 2rem 2rem;
     padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        max-width: 100%;
+        margin: 2rem 1rem;
+    }
 }
 
 .chat-bubble {
@@ -22,6 +29,17 @@
     background-color: #e5e5e5;
     margin-right: auto;
     border-bottom-left-radius: 0.25rem;
+}
+
+.first-chat-nametag {
+    font-size: 0.8em;
+    color: #666;
+    position: relative;
+    top: -16px;
+}
+
+.first-chat-nametag.human {
+    float: right;
 }
 
 .ai-conversation-intro {

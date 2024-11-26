@@ -42,11 +42,31 @@ add_action('wp_enqueue_scripts', function() {
         'twentytwentyfour-spenpo-chat',
         get_stylesheet_directory_uri() . '/assets/css/chat-styles.css',
         ['twentytwentyfour-spenpo-style'],
-        '1.0.0'
+        '1.0.1'
     );
 });
 
 function render_chat_bubbles($atts, $content = '') {
+    // match post tags with slug of one of the possible assistant names
+    $assistant_names = [
+        (object) ['name' => 'Claude', 'slug' => 'claude'],
+        (object) ['name' => 'ChatGPT', 'slug' => 'chatgpt'],
+        (object) ['name' => 'Grok', 'slug' => 'grok']
+    ];
+
+    $assistant_name = 'AI';
+    if (has_tag()) {
+        $tags = get_the_tags();
+        foreach ($assistant_names as $assistant) {
+            foreach ($tags as $tag) {
+                if ($tag->slug === $assistant->slug) {
+                    $assistant_name = $assistant->name;
+                    break;
+                }
+            }
+        }
+    }
+
     $parsedown = new Parsedown();
     
     // Decode the entire content first
@@ -71,14 +91,14 @@ function render_chat_bubbles($atts, $content = '') {
         $content
     );
     
-    error_log("Content after code block processing: " . $content);
+    // error_log("Content after code block processing: " . $content);
     
     // Split content into sections based on code blocks
     $sections = preg_split('/(```.*?```)/s', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
     $output = '<div class="chat-container">';
     
     foreach ($sections as $section) {
-        error_log("Processing section: " . $section);
+        // error_log("Processing section: " . $section);
         
         // If this is a code block, add it directly
         if (preg_match('/^```.*?```$/s', $section)) {
@@ -90,6 +110,9 @@ function render_chat_bubbles($atts, $content = '') {
         $lines = explode("\n", trim($section));
         $markdown_buffer = '';
         
+        $first_human = 1;
+        $first_assistant = 1;
+
         foreach ($lines as $line) {
             $line = strip_tags($line);
             
@@ -101,6 +124,8 @@ function render_chat_bubbles($atts, $content = '') {
                 }
                 $text = str_replace(['<br>', '</br>', '<br/>', '<br />'], '', $matches[1]);
                 $output .= '<div class="chat-bubble human">' . esc_html($text) . '</div>';
+                $output .= $first_human ? '<div class="first-chat-nametag human">Spenpo</div>' : '';
+                $first_human = 0;
             } elseif (preg_match('/^\*\*Assistant\*\*: (.+)$/', $line, $matches)) {
                 if (!empty($markdown_buffer)) {
                     $parsed = $parsedown->text($markdown_buffer);
@@ -108,7 +133,9 @@ function render_chat_bubbles($atts, $content = '') {
                     $markdown_buffer = '';
                 }
                 $text = str_replace(['<br>', '</br>', '<br/>', '<br />'], '', $matches[1]);
-                $output .= '<div class="chat-bubble assistant">' . esc_html($text) . '</div>';
+                $output .= '<div class="chat-bubble assistant first-chat">' . esc_html($text) . '</div>';
+                $output .= $first_assistant ? '<div class="first-chat-nametag assistant">' . $assistant_name . '</div>' : '';
+                $first_assistant = 0;
             } else {
                 $markdown_buffer .= $line . "\n";
             }
@@ -122,7 +149,7 @@ function render_chat_bubbles($atts, $content = '') {
     
     $output .= '</div>';
     
-    error_log("Final output: " . $output);
+    // error_log("Final output: " . $output);
     return $output;
 }
 
