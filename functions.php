@@ -42,7 +42,7 @@ add_action('wp_enqueue_scripts', function() {
         'twentytwentyfour-spenpo-chat',
         get_stylesheet_directory_uri() . '/assets/css/chat-styles.css',
         ['twentytwentyfour-spenpo-style'],
-        '1.0.1'
+        '0.0.6'
     );
 });
 
