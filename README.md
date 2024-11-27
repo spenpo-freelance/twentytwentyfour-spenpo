@@ -4,7 +4,11 @@ This is a child theme for the Twenty Twenty Four theme. It is used to add custom
 
 ## Development
 
-To develop on this theme, you can clone the repository and stick it in your `/wp-content/themes/` directory. Run WordPress locally however you normally do, and activate the theme via the admin dashboard.
+To develop on this theme, you can clone the repository and sync the `src` directory to the `/wp-content/themes/twentytwentyfour-[YOUR_CHILD_THEME_NAME]/` directory. 
+* Run WordPress locally however you normally do
+    * Check out my [wp-env](https://github.com/spope851/wp-env) project if you don't know how to do that.
+* Activate the theme via the admin dashboard.
+* if you make your changes from inside the wordpress source code, sync your changes to the `src` directory by running `rsync -avz --delete . ../out/of/wordpress/twentytwentyfour-[YOUR_CHILD_THEME_NAME]/src/`
 
 ## Deployment
 
