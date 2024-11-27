@@ -14,6 +14,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Debug - List files
+        run: |
+          echo "Current branch: ${{ github.ref }}"
+          echo "Files in src directory:"
+          ls -la src/
+          echo "code in functions.php:"
+          cat src/functions.php
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
