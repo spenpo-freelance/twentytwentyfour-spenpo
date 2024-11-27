@@ -24,8 +24,8 @@ jobs:
           script: |
             if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
               # Production deployment
-              rsync -avz --delete ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/ ./src/
+              rsync -avz --delete src/ ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/
             elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
               # Staging deployment
-              rsync -avz --delete ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/ ./src/
+              rsync -avz --delete src/ ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/
             fi
