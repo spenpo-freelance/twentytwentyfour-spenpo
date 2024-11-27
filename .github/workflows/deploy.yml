@@ -22,32 +22,20 @@ jobs:
           echo "code in functions.php:"
           cat src/functions.php
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.8
+      - name: Set deployment path
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "DEPLOY_PATH=${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_PATH=${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
+          fi
+
+      - name: Deploy via Rsync
+        uses: burnett01/rsync-deployments@5.2.1
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            echo "Debug: Current working directory"
-            pwd
-            echo "Debug: Listing workspace contents"
-            ls -la
-            
-            if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-              # Production deployment
-              echo "Debug: Running production rsync"
-              rsync -avz --delete $GITHUB_WORKSPACE/src/ ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/
-            elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
-              # Staging deployment
-              echo "Debug: Running staging rsync"
-              rsync -avz --delete $GITHUB_WORKSPACE/src/ ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/
-            fi
-            
-            echo "Debug: Listing destination contents after rsync"
-            if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-              ls -la ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/
-            else
-              ls -la ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/
-            fi
+          switches: -avzr --delete
+          path: src/
+          remote_path: ${{ env.DEPLOY_PATH }}
+          remote_host: ${{ secrets.HOST }}
+          remote_user: ${{ secrets.USERNAME }}
+          remote_key: ${{ secrets.PRIVATE_KEY }}
