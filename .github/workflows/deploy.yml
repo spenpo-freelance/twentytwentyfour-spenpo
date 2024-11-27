@@ -30,10 +30,24 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            echo "Debug: Current working directory"
+            pwd
+            echo "Debug: Listing workspace contents"
+            ls -la
+            
             if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
               # Production deployment
-              rsync -avz --delete src/ ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/
+              echo "Debug: Running production rsync"
+              rsync -avz --delete $GITHUB_WORKSPACE/src/ ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/
             elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
               # Staging deployment
-              rsync -avz --delete src/ ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/
+              echo "Debug: Running staging rsync"
+              rsync -avz --delete $GITHUB_WORKSPACE/src/ ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/
+            fi
+            
+            echo "Debug: Listing destination contents after rsync"
+            if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+              ls -la ${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/
+            else
+              ls -la ${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/
             fi
