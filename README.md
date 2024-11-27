@@ -48,6 +48,21 @@ base64-encoded-key-data-goes-here
 
 Then you can add the private key to the GitHub Actions workflow by adding it to the `PRIVATE_KEY` secret in the repository settings.
 
+### Additional secrets
+
+* `REMOTE_PATH`: The path to the wordpress root directory on your server
+* `USERNAME`: The username to use to connect to your server
+* `HOST`: The host to use to connect to your server
+* `PORT`: The port to use to connect to your server
+
+### Staging
+
+* If you want to deploy to the staging environment, you can create a new branch and push it to the repository.
+* The workflow will automatically deploy the branch to the staging environment.
+* You may have to reconfigure the `DEPLOY_PATH` logic in the workflow to match the staging path on your server.
+* If your staging environment is on a separate server, you will have to add the new server's secrets to the repository secrets and update the workflow to use the new server and other secrets.
+* It can easily be extended to support more environments on other branches by adding additional `if` statements to the workflow.
+
 ## Manual Deployment
 
 If you'd rather deploy the theme manually, just add your local machine's public key to the authorized keys file on your server and run the opposite rsync command from the deployment workflow:

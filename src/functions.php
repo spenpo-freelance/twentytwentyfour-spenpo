@@ -49,7 +49,7 @@ add_action('wp_enqueue_scripts', function() {
 function render_chat_bubbles($atts, $content = '') {
     // match post tags with slug of one of the possible assistant names
     $assistant_names = [
-        (object) ['name' => 'Hello Staging ENV -- TAKE 4', 'slug' => 'claude'],
+        (object) ['name' => 'Claude', 'slug' => 'claude'],
         (object) ['name' => 'ChatGPT', 'slug' => 'chatgpt'],
         (object) ['name' => 'Grok', 'slug' => 'grok']
     ];
