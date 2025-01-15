@@ -17,9 +17,9 @@ jobs:
       - name: Set deployment path
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "DEPLOY_PATH=${{ secrets.REMOTE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=${{ secrets.INTROSPECTIVE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
           else
-            echo "DEPLOY_PATH=${{ secrets.REMOTE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=${{ secrets.INTROSPECTIVE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
           fi
 
       - name: Deploy via Rsync
@@ -28,7 +28,7 @@ jobs:
           switches: -avzr --delete
           path: src/
           remote_path: ${{ env.DEPLOY_PATH }}
-          remote_host: ${{ secrets.HOST }}
-          remote_user: ${{ secrets.USERNAME }}
-          remote_key: ${{ secrets.PRIVATE_KEY }}
-          remote_port: ${{ secrets.PORT }}
+          remote_host: ${{ secrets.HOSTINGER_HOST }}
+          remote_user: ${{ secrets.HOSTINGER_USERNAME }}
+          remote_key: ${{ secrets.HOSTINGER_PRIVATE_KEY }}
+          remote_port: ${{ secrets.HOSTINGER_PORT }}
