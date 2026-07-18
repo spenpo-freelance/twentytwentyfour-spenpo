@@ -19,7 +19,7 @@ jobs:
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "DEPLOY_PATH=${{ secrets.INTROSPECTIVE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
           else
-            echo "DEPLOY_PATH=${{ secrets.INTROSPECTIVE_PATH }}/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=${{ secrets.INTROSPECTIVE_PATH }}/staging/wp-content/themes/twentytwentyfour-spenpo/" >> $GITHUB_ENV
           fi
 
       - name: Deploy via Rsync

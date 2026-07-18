@@ -1,5 +1,10 @@
 <?php
 require_once get_stylesheet_directory() . '/includes/Parsedown.php';
+require_once get_stylesheet_directory() . '/includes/book-reviews/constants.php';
+require_once get_stylesheet_directory() . '/includes/book-reviews/cpt.php';
+require_once get_stylesheet_directory() . '/includes/book-reviews/import.php';
+require_once get_stylesheet_directory() . '/includes/book-reviews/admin.php';
+require_once get_stylesheet_directory() . '/includes/book-reviews/rest.php';
 
 // List child pages for the current page shortcode
 function wpb_list_child_pages() { 
