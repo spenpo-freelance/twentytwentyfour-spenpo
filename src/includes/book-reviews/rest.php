@@ -1,6 +1,6 @@
 <?php
 /**
- * REST endpoint for Libby JSON import.
+ * Book review REST: Libby import + public fields.
  */
 
 if (!defined('ABSPATH')) {
@@ -20,6 +20,27 @@ function spenpo_register_libby_import_rest_route() {
     ]);
 }
 add_action('rest_api_init', 'spenpo_register_libby_import_rest_route');
+
+/**
+ * Expose Hostinger AI's External Featured Image URL on book_review REST.
+ *
+ * Stored as protected meta `_thumbnail_ext_url`, so it is omitted from `meta`
+ * unless registered. A top-level field keeps the public payload readable.
+ */
+function spenpo_register_book_review_external_featured_image_field() {
+    register_rest_field('book_review', 'external_featured_image', [
+        'get_callback' => function ($object) {
+            $url = get_post_meta((int) $object['id'], '_thumbnail_ext_url', true);
+            return is_string($url) && $url !== '' ? $url : '';
+        },
+        'schema'       => [
+            'description' => 'URL from the External Featured Image field.',
+            'type'        => 'string',
+            'context'     => ['view', 'edit', 'embed'],
+        ],
+    ]);
+}
+add_action('rest_api_init', 'spenpo_register_book_review_external_featured_image_field');
 
 /**
  * Handle authenticated Libby import requests.
